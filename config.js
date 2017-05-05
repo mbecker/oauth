@@ -4,7 +4,7 @@
 
 module.exports = {
   sql: {
-    database: 'oauth_demo',
+    database: 'oauth',
     username: 'root',
     password: '',
     dialect: 'mysql', // PostgreSQL, MySQL, MariaDB, SQLite and MSSQL See more: http://docs.sequelizejs.com/en/latest/
@@ -14,8 +14,8 @@ module.exports = {
   mongo: {
     uri: 'mongodb://username:password@domain.mongolab.com:63439/tsc'
   },
-  seedDB:false,
+  seedDB:true,
   seedMongoDB:false,
-  seedDBForce:true,
+  seedDBForce:false,
   db:'sql' // mongo,sql if you want to use any SQL change dialect above in sql config
 }
