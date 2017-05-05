@@ -14,7 +14,7 @@ module.exports = {
   mongo: {
     uri: 'mongodb://username:password@domain.mongolab.com:63439/tsc'
   },
-  seedDB:true,
+  seedDB:false,
   seedMongoDB:false,
   seedDBForce:false,
   db:'sql' // mongo,sql if you want to use any SQL change dialect above in sql config

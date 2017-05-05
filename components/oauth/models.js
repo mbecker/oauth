@@ -11,6 +11,7 @@ var OAuthAuthorizationCode = sqldb.OAuthAuthorizationCode;
 var OAuthRefreshToken = sqldb.OAuthRefreshToken;
 
 function getAccessToken(bearerToken) {
+  console.log("getAccessToken");
   return OAuthAccessToken
     .findOne({
       where: {access_token: bearerToken},
@@ -36,6 +37,7 @@ function getAccessToken(bearerToken) {
 }
 
 function getClient(clientId, clientSecret) {
+  console.log("getClient");
   const options = {
     where: {client_id: clientId},
     attributes: ['id', 'client_id', 'redirect_uri', 'scope'],
@@ -67,7 +69,18 @@ function getUser(username, password) {
       attributes: ['id', 'username', 'password', 'scope'],
     })
     .then(function (user) {
-      return user.password == password ? user.toJSON() : false;
+      console.log(":: getUser ::");
+      console.log(user.username);
+      console.log(user.password);
+      if (user.password == password) {
+        console.log("Return user");
+        console.log(user.toJSON());
+        return user.toJSON();
+      } else {
+        console.log("Return false");
+        return false;
+      }
+      // return user.password == password ? user.toJSON() : false;
     })
     .catch(function (err) {
       console.log("getUser - Err: ", err)
@@ -75,6 +88,7 @@ function getUser(username, password) {
 }
 
 function revokeAuthorizationCode(code) {
+  console.log("revokeAuthorizationCode");
   return OAuthAuthorizationCode.findOne({
     where: {
       authorization_code: code.code
@@ -96,6 +110,7 @@ function revokeAuthorizationCode(code) {
 }
 
 function revokeToken(token) {
+  console.log("revokeToken");
   return OAuthRefreshToken.findOne({
     where: {
       refresh_token: token.refreshToken
@@ -118,6 +133,7 @@ function revokeToken(token) {
 
 
 function saveToken(token, client, user) {
+  console.log("saveToken");
   return Promise.all([
       OAuthAccessToken.create({
         access_token: token.accessToken,
@@ -152,6 +168,7 @@ function saveToken(token, client, user) {
 }
 
 function getAuthorizationCode(code) {
+  console.log("getAuthorizationCode");
   return OAuthAuthorizationCode
     .findOne({
       attributes: ['client_id', 'expires', 'user_id', 'scope'],
@@ -176,6 +193,7 @@ function getAuthorizationCode(code) {
 }
 
 function saveAuthorizationCode(code, client, user) {
+  console.log("saveAuthorizationCode");
   return OAuthAuthorizationCode
     .create({
       expires: code.expiresAt,
@@ -193,6 +211,7 @@ function saveAuthorizationCode(code, client, user) {
 }
 
 function getUserFromClient(client) {
+  console.log("getUserFromClient");
   var options = {
     where: {client_id: client.client_id},
     include: [User],
@@ -212,6 +231,7 @@ function getUserFromClient(client) {
 }
 
 function getRefreshToken(refreshToken) {
+  console.log("getRefreshToken");
   if (!refreshToken || refreshToken === 'undefined') return false
 
   return OAuthRefreshToken
@@ -237,12 +257,26 @@ function getRefreshToken(refreshToken) {
     });
 }
 
-function validateScope(token, client) {
+function validateScope(user, client, scope) {
+  console.log("validateScope");
+  console.log(user);
+  console.log(client);
+  console.log(scope)
+  if (scope == null) {
+    console.log("scope == null");
+    return true;
+  }
   return (user.scope === scope && client.scope === scope && scope !== null) ? scope : false
 }
 
 function verifyScope(token, scope) {
-    return token.scope === scope
+  console.log("verifyScope");
+  console.log(token);
+  console.log(scope);
+  if (token.scope == 1) {
+    return true;
+  }
+  return token.scope === scope
 }
 
 module.exports = {
